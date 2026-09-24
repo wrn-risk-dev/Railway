@@ -1,3 +1,4 @@
+# Dockerfile
 FROM debian:bookworm
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -32,8 +33,7 @@ RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/
 RUN sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
 RUN sed -i 's/#PubkeyAuthentication yes/PubkeyAuthentication yes/' /etc/ssh/sshd_config
 
-# Subsystem sftp line ကို ဒီမှာ လုံးဝမထည့်ပါနှင့်
-
+# Subsystem sftp line ကို ဒီနေရာမှာ လုံးဝမထည့်ပါ
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
 

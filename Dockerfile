@@ -31,9 +31,7 @@ RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/
 RUN sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
 RUN sed -i 's/#PubkeyAuthentication yes/PubkeyAuthentication yes/' /etc/ssh/sshd_config
 
-# Subsystem sftp line အားလုံးဖျက်ပြီး တစ်ခုတည်းထည့်ပါ
 RUN sed -i '/^Subsystem sftp/d' /etc/ssh/sshd_config
-RUN echo "Subsystem sftp internal-sftp" >> /etc/ssh/sshd_config
 
 COPY start.sh /start.sh
 RUN chmod +x /start.sh

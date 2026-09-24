@@ -4,6 +4,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y \
     openssh-server \
+    openssh-sftp-server \
     sudo \
     curl \
     wget \
@@ -22,7 +23,7 @@ RUN apt-get update && apt-get install -y \
     cron \
     && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /var/run/sshd
+RUN mkdir -p /var/run/sshd /run/sshd
 
 RUN echo 'root:root' | chpasswd
 
@@ -30,10 +31,9 @@ RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/
 RUN sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
 RUN sed -i 's/#PubkeyAuthentication yes/PubkeyAuthentication yes/' /etc/ssh/sshd_config
 
-# SFTP subsystem ထည့်ခြင်း
-RUN echo "Subsystem sftp /usr/lib/openssh/sftp-server" >> /etc/ssh/sshd_config
-
-RUN echo "AllowUsers root backdoor" >> /etc/ssh/sshd_config
+# Subsystem sftp line အားလုံးဖျက်ပြီး တစ်ခုတည်းထည့်ပါ
+RUN sed -i '/^Subsystem sftp/d' /etc/ssh/sshd_config
+RUN echo "Subsystem sftp internal-sftp" >> /etc/ssh/sshd_config
 
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
